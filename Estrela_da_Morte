@@ -1,5 +1,5 @@
-https://swapi.dev/
-https://swapi.dev/api/
+//  https://swapi.dev/  //
+//  https://swapi.dev/api/  //
 
 //CRIANDO A TABELA PLANETAS //
 
@@ -26,6 +26,7 @@ CREATE TABLE NAVES(
   Carga float NOT NULL,
   Classe varchar(100) NOT NULL
 )
+
 GO
 ALTER TABLE Naves ADD CONSTRAINT PK_Naves PRIMARY KEY (ID_Nave);
 
@@ -37,11 +38,51 @@ CREATE TABLE Pilotos(
   Ano_Nascimento varchar(10) NOT NULL,
   ID_Planeta int NOT NULL,                //Vai ser uma chave estrangeira para referenciar o ID da tabela Planetas//
 )
+
 GO
 ALTER TABLE Pilotos ADD CONSTRAINT PK_Pilotos PRIMARY KEY (ID_Piloto)
+
 GO
 ALTER TABLE Pilotos  ADD CONSTRAINT FK_Pilotos_Planetas FOREIGN KEY (ID_Planeta)
 REFERENCES Planetas (ID_Planeta)
 
-  
+//CRIANDO TABELA PILOTOS_NAVES //
+CREATE TABLE Pilotos_Naves(
+	ID_Piloto int NOT NULL,
+	ID_Nave int NOT NULL,
+	Flag_Autorizacao bit NOT NULL,
+)
+
+GO
+ALTER TABLE Pilotos_Naves ADD CONSTRAINT PK_Pilotos_Naves PRIMARY KEY (ID_Piloto, ID_Nave);
+
+GO
+ALTER TABLE Pilotos_Naves ADD CONSTRAINT FK_Pilotos_Naves_Pilotos FOREIGN KEY (ID_Piloto)
+REFERENCES Pilotos (ID_Piloto)
+
+GO
+ALTER TABLE Pilotos_Naves ADD CONSTRAINT FK_Pilotos_Naves_Naves FOREIGN KEY (ID_Nave)
+REFERENCES Naves (ID_Nave)
+
+GO
+ALTER TABLE Pilotos_Naves ADD CONSTRAINT DF_Pilotos_Naves_Flag_Autorizacao DEFAULT (1) FOR Flag_Autorizacao 
+
+// CRIANDO TABELA HISTORICO DE VIAGEM //
+
+CREATE TABLE Historico_Viagem(
+	ID_Nave int NOT NULL,
+	ID_Piloto int NOT NULL,
+	Data_Saida datetime NOT NULL,
+	Data_Chegada datetime NULL
+)
+GO
+
+ALTER TABLE Historico_Viagem ADD CONSTRAINT FK_Historico_Viagem_Pilotos_Naves FOREIGN KEY (ID_Piloto, ID_Nave)  
+REFERENCES Pilotos_Naves (ID_Piloto, ID_Nave)
+
+GO 
+ALTER TABLE Historico_Viagem CHECK CONSTRAINT FK_Historico_Viagem_Pilotos_Naves
+
+
+
   
